@@ -249,6 +249,21 @@ st.markdown("---")
 
 st.header("📄 保存履歴")
 
+# =====================================
+# Excelダウンロード
+# =====================================
+
+if os.path.exists(EXCEL_FILE):
+
+    with open(EXCEL_FILE, "rb") as file:
+
+        st.download_button(
+            label="📥 Excelダウンロード",
+            data=file,
+            file_name=EXCEL_FILE,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
 if os.path.exists(EXCEL_FILE):
 
     history_df = pd.read_excel(EXCEL_FILE)
