@@ -156,12 +156,19 @@ if st.button("💰 交通費計算"):
     )
 
     # -----------------------------
-    # 請求交通費
-    # -----------------------------
-    total_fee = (
-        base_fee
-        + management_fee
-    )
+# 請求交通費
+# 管理費込み後100円単位切り上げ
+# -----------------------------
+import math
+
+subtotal = (
+    base_fee
+    + management_fee
+)
+
+total_fee = math.ceil(
+    subtotal / 100
+) * 100
 
     # =====================================
     # 結果表示
@@ -182,18 +189,20 @@ if st.button("💰 交通費計算"):
     # 内訳表示
     # =====================================
     breakdown_df = pd.DataFrame({
-        "項目": [
-            "車両費",
-            "燃料費",
-            "遠方費",
-            f"管理費({MANAGEMENT_RATE}%)"
-        ],
-        "金額": [
-            CAR_FEE,
-            fuel_fee,
-            remote_fee,
-            management_fee
-        ]
+       "項目": [
+    "車両費",
+    "燃料費",
+    "遠方費",
+    f"管理費({MANAGEMENT_RATE}%)",
+    "最終請求額"
+],
+       "金額": [
+    CAR_FEE,
+    fuel_fee,
+    remote_fee,
+    management_fee,
+    total_fee
+]
     })
 
     st.table(breakdown_df)
