@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import math
 from datetime import datetime
 
 # =====================================
@@ -159,7 +160,7 @@ if st.button("💰 交通費計算"):
 # 請求交通費
 # 管理費込み後100円単位切り上げ
 # -----------------------------
-import math
+
 
 subtotal = (
     base_fee
