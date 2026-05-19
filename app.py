@@ -36,16 +36,46 @@ FUEL_PRICE = st.sidebar.number_input(
     value=170
 )
 
-REMOTE_DISTANCE = st.sidebar.number_input(
-    "遠方距離(km)",
+# =====================================
+# 遠方費設定
+# =====================================
+
+st.sidebar.subheader("遠方費設定")
+
+REMOTE_DISTANCE_1 = st.sidebar.number_input(
+    "遠方距離①(km)",
     min_value=0,
     value=100
 )
 
-REMOTE_FEE = st.sidebar.number_input(
-    "遠方費(円)",
+REMOTE_FEE_1 = st.sidebar.number_input(
+    "遠方費①(円)",
     min_value=0,
     value=3000
+)
+
+REMOTE_DISTANCE_2 = st.sidebar.number_input(
+    "遠方距離②(km)",
+    min_value=0,
+    value=150
+)
+
+REMOTE_FEE_2 = st.sidebar.number_input(
+    "遠方費②(円)",
+    min_value=0,
+    value=5000
+)
+
+REMOTE_DISTANCE_3 = st.sidebar.number_input(
+    "遠方距離③(km)",
+    min_value=0,
+    value=200
+)
+
+REMOTE_FEE_3 = st.sidebar.number_input(
+    "遠方費③(円)",
+    min_value=0,
+    value=8000
 )
 
 MANAGEMENT_RATE = st.sidebar.number_input(
@@ -132,13 +162,26 @@ if st.button("💰 交通費計算"):
 
     # -----------------------------
     # 遠方費
-    # -----------------------------
-    remote_fee = (
-        REMOTE_FEE
-        if distance >= REMOTE_DISTANCE
-        else 0
-    )
+    # -----------------------------　　　　　　　 
+# -----------------------------
+# 遠方費判定
+# -----------------------------
 
+if distance >= REMOTE_DISTANCE_3:
+
+    remote_fee = REMOTE_FEE_3
+
+elif distance >= REMOTE_DISTANCE_2:
+
+    remote_fee = REMOTE_FEE_2
+
+elif distance >= REMOTE_DISTANCE_1:
+
+    remote_fee = REMOTE_FEE_1
+
+else:
+
+    remote_fee = 0
     # -----------------------------
     # 実費交通費
     # -----------------------------
