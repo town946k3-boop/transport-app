@@ -39,7 +39,6 @@ FUEL_PRICE = st.sidebar.number_input(
 # =====================================
 # 遠方費設定
 # =====================================
-
 st.sidebar.subheader("遠方費設定")
 
 REMOTE_DISTANCE_1 = st.sidebar.number_input(
@@ -78,6 +77,9 @@ REMOTE_FEE_3 = st.sidebar.number_input(
     value=8000
 )
 
+# =====================================
+# 管理費設定
+# =====================================
 MANAGEMENT_RATE = st.sidebar.number_input(
     "管理費(%)",
     min_value=0,
@@ -161,27 +163,24 @@ if st.button("💰 交通費計算"):
     )
 
     # -----------------------------
-    # 遠方費
-    # -----------------------------　　　　　　　 
-# -----------------------------
-# 遠方費判定
-# -----------------------------
+    # 遠方費判定
+    # -----------------------------
+    if distance >= REMOTE_DISTANCE_3:
 
-if distance >= REMOTE_DISTANCE_3:
+        remote_fee = REMOTE_FEE_3
 
-    remote_fee = REMOTE_FEE_3
+    elif distance >= REMOTE_DISTANCE_2:
 
-elif distance >= REMOTE_DISTANCE_2:
+        remote_fee = REMOTE_FEE_2
 
-    remote_fee = REMOTE_FEE_2
+    elif distance >= REMOTE_DISTANCE_1:
 
-elif distance >= REMOTE_DISTANCE_1:
+        remote_fee = REMOTE_FEE_1
 
-    remote_fee = REMOTE_FEE_1
+    else:
 
-else:
+        remote_fee = 0
 
-    remote_fee = 0
     # -----------------------------
     # 実費交通費
     # -----------------------------
@@ -200,15 +199,16 @@ else:
     )
 
     # -----------------------------
-    # 請求交通費
-    # 管理費込み後100円単位切り上げ
+    # 管理費込み合計
     # -----------------------------
-
     subtotal = (
         base_fee
         + management_fee
     )
 
+    # -----------------------------
+    # 100円単位切り上げ
+    # -----------------------------
     total_fee = math.ceil(
         subtotal / 100
     ) * 100
@@ -232,20 +232,23 @@ else:
     # 内訳表示
     # =====================================
     breakdown_df = pd.DataFrame({
-       "項目": [
-    "車両費",
-    "燃料費",
-    "遠方費",
-    f"管理費({MANAGEMENT_RATE}%)",
-    "最終請求額"
-],
-       "金額": [
-    CAR_FEE,
-    fuel_fee,
-    remote_fee,
-    management_fee,
-    total_fee
-]
+
+        "項目": [
+            "車両費",
+            "燃料費",
+            "遠方費",
+            f"管理費({MANAGEMENT_RATE}%)",
+            "最終請求額"
+        ],
+
+        "金額": [
+            CAR_FEE,
+            fuel_fee,
+            remote_fee,
+            management_fee,
+            total_fee
+        ]
+
     })
 
     st.table(breakdown_df)
@@ -254,6 +257,7 @@ else:
     # 保存データ
     # =====================================
     save_data = {
+
         "日時": [datetime.now()],
         "隊員名": [staff_name],
         "現場名": [site_name],
@@ -266,6 +270,7 @@ else:
         "遠方費": [remote_fee],
         "管理費": [management_fee],
         "請求交通費": [total_fee]
+
     }
 
     new_df = pd.DataFrame(save_data)
@@ -283,6 +288,7 @@ else:
         )
 
     else:
+
         combined_df = new_df
 
     combined_df.to_excel(
@@ -304,7 +310,6 @@ st.header("📄 保存履歴")
 # =====================================
 # 履歴削除ボタン
 # =====================================
-
 if os.path.exists(EXCEL_FILE):
 
     if st.button("🗑 保存履歴を削除"):
@@ -318,7 +323,6 @@ if os.path.exists(EXCEL_FILE):
 # =====================================
 # Excelダウンロード
 # =====================================
-
 if os.path.exists(EXCEL_FILE):
 
     with open(EXCEL_FILE, "rb") as file:
@@ -330,6 +334,9 @@ if os.path.exists(EXCEL_FILE):
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
+# =====================================
+# 履歴表示
+# =====================================
 if os.path.exists(EXCEL_FILE):
 
     history_df = pd.read_excel(EXCEL_FILE)
